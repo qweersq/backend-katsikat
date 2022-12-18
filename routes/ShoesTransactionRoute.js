@@ -4,12 +4,14 @@ import {
     getShoesTransactionById,
     createShoesTransaction,
     updateShoesTransaction,
-    deleteShoesTransaction
+    deleteShoesTransaction,
+    getOrderList
 } from "../controllers/ShoesTransactionController.js";
 
 const router = express.Router();
 
 router.get('/shoes-transaction', getShoesTransaction);
+router.get('/order/shoes-transaction', getOrderList);
 router.get('/shoes-transaction/:id', getShoesTransactionById);
 router.post('/create/shoes-transaction', createShoesTransaction);
 router.put('/update/shoes-transaction/:id', updateShoesTransaction);
