@@ -58,7 +58,7 @@ const CustomerModel = db.define('customer', {
     timestamps: false
 });    
 
-CustomerModel.hasMany(shoesTransaction, { foreignKey: 'customer_id', as: 'shoesTransaction' });
+CustomerModel.hasMany(shoesTransaction, { foreignKey: 'customer_id', as: 'shoes_transaction' });
 shoesTransaction.belongsTo(CustomerModel, { foreignKey: 'customer_id' });
 
 export default CustomerModel;

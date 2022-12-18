@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.get('/shipping-cost', getShippingCost);
 router.get('/shipping-cost/:id', getShippingCostById);
-router.post('/shipping-cost', createShippingCost);
-router.put('/shipping-cost/:id', updateShippingCost);
+router.post('/create/shipping-cost', createShippingCost);
+router.put('/update/shipping-cost/:id', updateShippingCost);
 router.delete('/shipping-cost/:id', deleteShippingCost);
 
 export default router;

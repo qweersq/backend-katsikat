@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-import db from "./config/Database.js";
 import userRoute from "./routes/UserRoute.js";
 import shoesTransRoute from "./routes/ShoesTransactionRoute.js";
 import staffRoute from "./routes/StaffRoute.js";
@@ -11,14 +10,15 @@ import shippingCostRoute from "./routes/ShippingCostRoute.js";
 import expenditureRoute from "./routes/ExpenditureRoute.js";
 import customerRoute from "./routes/CustomerRoute.js";
 import dotenv from "dotenv";
+import db from "./config/Database.js";
 
 dotenv.config(); 
 
 const app = express();
 
-// (async() => {
-//   await db.sync();
-// })();
+(async() => {
+  await db.sync();
+})();
  
 app.use(session({
   secret: process.env.SESSION_SECRET,

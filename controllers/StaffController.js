@@ -63,6 +63,17 @@ export const updateStaff = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 }
-export const deleteStaff = (req, res) => {
+export const deleteStaff = async (req, res) => {
+    const idStaff = req.params.id;
+    const sql = `DELETE FROM staff WHERE id = ${idStaff}`;
+    try {
+        db.query(sql, (err, result) => {
+            if (err) response(err);
+        }
+        );
+        res.status(200).json({ msg: "Staff deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
 
 }

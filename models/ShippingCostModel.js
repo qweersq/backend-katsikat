@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
+import shoesTransaction from "./ShoesTransactionModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -47,5 +48,7 @@ const ShippingCostModel = db.define('shipping_cost', {
     timestamps: false
 });    
 
+ShippingCostModel.hasMany(shoesTransaction, {foreignKey: 'shipping_id', as: 'shoes_transaction'});
+shoesTransaction.belongsTo(ShippingCostModel, {foreignKey: 'shipping_id'});
 
 export default ShippingCostModel;
