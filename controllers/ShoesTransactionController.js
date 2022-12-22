@@ -13,8 +13,29 @@ export const getShoesTransaction = async (req, res) => {
         res.status(500).json({ message: "Error" });
     }
 }
+
+export const getDashboardData = async (req, res) => {
+    const sql = `SELECT
+    SUM(CASE WHEN status = 'received' THEN 1 ELSE 0 END) AS received,
+    SUM(CASE WHEN status = 'process' THEN 1 ELSE 0 END) AS process,
+    SUM(CASE WHEN status = 'ready' THEN 1 ELSE 0 END) AS ready,
+    SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS done,
+    COUNT(DISTINCT customer_id) AS new_customer,
+    COUNT(id)-COUNT(DISTINCT customer_id) AS repeat_order,
+    SUM(CASE WHEN status = 'pick-up' THEN 1 ELSE 0 END) AS pick_up,
+    COUNT(CASE WHEN due_date = CURRENT_DATE THEN 1 ELSE NULL END) AS must_done
+FROM shoes_transaction`
+
+    try {
+        const dashboardData = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(dashboardData);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
 export const getOrderList = async (req, res) => {
-    const sql = `SELECT st.id, c.name, tr.type as treatment, c.address, s.type, st.pickup_date, st.due_date FROM shoes_transaction st JOIN customer c ON c.id = st.customer_id JOIN treatment tr ON tr.id = st.treatment_id JOIN shoes s ON s.id = st.shoes_id`
+    const sql = `SELECT st.id, st.status, c.name, tr.type as treatment, c.address, s.type, COALESCE(sp.staff_id, 'Not Yet Delivered') AS courier,COALESCE(st.staff_id, 'Belum ada pencuci') AS cleaner, st.pickup_date, st.due_date FROM shoes_transaction st LEFT JOIN customer c ON c.id = st.customer_id LEFT JOIN treatment tr ON tr.id = st.treatment_id LEFT JOIN shoes s ON s.id = st.shoes_id LEFT JOIN staff sf ON sf.id = st.staff_id LEFT JOIN shipping_cost sp ON sp.id = st.shipping_id`
 
     try {
         const orderList = await db.query(sql, { type: db.QueryTypes.SELECT });
@@ -23,12 +44,14 @@ export const getOrderList = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 }
+
+
 export const getShoesTransactionById = async (req, res) => {
     try {
         const shoes_transaction = await ShoesTransaction.findOne({
             where: { id: req.params.id },
         });
-        res.status(200).json(shoes_transaction);
+        res.status(200).json(shoes_transaction);    
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -59,7 +82,7 @@ export const updateShoesTransaction = async (req, res) => {
         await db.query(sql, (err, result) => {
             if (err) response(err);
         });
-        res.status(200).json({ msg: "ShoesTransaction upshipping_idd successfully" });
+        res.status(200).json({ msg: "ShoesTransaction update successfully" });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }

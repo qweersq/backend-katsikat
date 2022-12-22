@@ -5,13 +5,15 @@ import {
     createShoesTransaction,
     updateShoesTransaction,
     deleteShoesTransaction,
-    getOrderList
+    getOrderList,
+    getDashboardData
 } from "../controllers/ShoesTransactionController.js";
 
 const router = express.Router();
 
 router.get('/shoes-transaction', getShoesTransaction);
 router.get('/order/shoes-transaction', getOrderList);
+router.get('/data/shoes-transaction', getDashboardData);
 router.get('/shoes-transaction/:id', getShoesTransactionById);
 router.post('/create/shoes-transaction', createShoesTransaction);
 router.put('/update/shoes-transaction/:id', updateShoesTransaction);
