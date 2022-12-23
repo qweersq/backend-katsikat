@@ -35,7 +35,16 @@ FROM shoes_transaction`
 }
 
 export const getOrderList = async (req, res) => {
-    const sql = `SELECT st.id, st.status, c.name, tr.type as treatment, c.address, s.type, COALESCE(sp.staff_id, 'Not Yet Delivered') AS courier,COALESCE(st.staff_id, 'Belum ada pencuci') AS cleaner, st.pickup_date, st.due_date FROM shoes_transaction st LEFT JOIN customer c ON c.id = st.customer_id LEFT JOIN treatment tr ON tr.id = st.treatment_id LEFT JOIN shoes s ON s.id = st.shoes_id LEFT JOIN staff sf ON sf.id = st.staff_id LEFT JOIN shipping_cost sp ON sp.id = st.shipping_id`
+    const sql = `SELECT DISTINCT st.id, st.status, c.name, tr.type as treatment, c.address, s.type, COALESCE(sf1.name, 'Not Yet Pickup') AS pickup_staff, COALESCE(sf2.name, 'Not Yet Delivery') AS delivery_staff,COALESCE(sf.name, 'Belum ada pencuci') AS cleaner, st.pickup_date, st.due_date 
+    FROM shoes_transaction st 
+    LEFT JOIN customer c ON c.id = st.customer_id 
+    LEFT JOIN treatment tr ON tr.id = st.treatment_id 
+    LEFT JOIN shoes s ON s.id = st.shoes_id 
+    LEFT JOIN staff sf ON sf.id = st.staff_id 
+    LEFT JOIN shipping_cost sp ON sp.id = st.pickup_staff
+    LEFT JOIN shipping_cost sp1 ON sp1.id = st.delivery_staff
+    LEFT JOIN staff sf1 ON sf1.id = sp.staff_id
+    LEFT JOIN staff sf2 ON sf2.id = sp1.staff_id`
 
     try {
         const orderList = await db.query(sql, { type: db.QueryTypes.SELECT });

@@ -20,6 +20,15 @@ const ShippingCostModel = db.define('shipping_cost', {
             notEmpty: true,
         }
     },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'pick-up',
+        validate: {
+            notEmpty: true,
+            isIn: [['delivery']]
+        }
+    },
     date: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -48,7 +57,9 @@ const ShippingCostModel = db.define('shipping_cost', {
     timestamps: false
 });    
 
-ShippingCostModel.hasMany(shoesTransaction, {foreignKey: 'shipping_id', as: 'shoes_transaction'});
-shoesTransaction.belongsTo(ShippingCostModel, {foreignKey: 'shipping_id'});
+ShippingCostModel.hasMany(shoesTransaction, {foreignKey: 'pickup_staff', as: 'shoes_transaction_pickup'});
+shoesTransaction.belongsTo(ShippingCostModel, {foreignKey: 'pickup_staff'});
+ShippingCostModel.hasMany(shoesTransaction, {foreignKey: 'delivery_staff', as: 'shoes_transaction_delivery'});
+shoesTransaction.belongsTo(ShippingCostModel, {foreignKey: 'delivery_staff'});
 
 export default ShippingCostModel;

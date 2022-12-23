@@ -33,7 +33,14 @@ const ShoesTransactionModel = db.define('shoes_transaction', {
             notEmpty: true,
         }
     },
-    shipping_id : {
+    pickup_staff : {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    delivery_staff : {
         type: DataTypes.INTEGER,
         allowNull: true,
         validate: {

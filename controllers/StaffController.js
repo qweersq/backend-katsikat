@@ -20,6 +20,18 @@ export const getStaff = async (req, res) => {
         res.status(500).json({ message: "Error" });
     }
 }
+
+export const getStaffForm = async (req, res) => {
+    const sql = `SELECT name AS value, name AS label FROM staff`
+
+    try {
+        const staffForm = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(staffForm);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
 export const getStaffById = async (req, res) => {
     try {
         const staff = await Staff.findOne({

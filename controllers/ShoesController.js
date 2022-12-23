@@ -11,6 +11,17 @@ export const getShoes = async (req, res) => {
         res.status(500).json({ message: "Error" });
     }
 }
+
+export const getShoesForm = async (req, res) => {
+    const sql = `SELECT type AS value, type AS label FROM shoes`
+
+    try {
+        const shoesForm = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(shoesForm);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
 export const getShoesById = async (req, res) => {
     try {
         const shoes = await Shoes.findOne({

@@ -12,6 +12,16 @@ export const getTreatment = async (req, res) => {
         res.status(500).json({ message: "Error" });
     }
 }
+export const getTreatementForm = async (req, res) => {
+    const sql = `SELECT type AS value, type AS label FROM treatment`
+
+    try {
+        const treatmentForm = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(treatmentForm);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
 export const getTreatmentById = async (req, res) => {
     try {
         const treatment = await Treatment.findOne({
