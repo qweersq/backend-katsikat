@@ -22,7 +22,7 @@ export const getStaff = async (req, res) => {
 }
 
 export const getStaffForm = async (req, res) => {
-    const sql = `SELECT name AS value, name AS label FROM staff`
+    const sql = `SELECT id, name AS value, name AS label FROM staff`
 
     try {
         const staffForm = await db.query(sql, { type: db.QueryTypes.SELECT });

@@ -49,20 +49,20 @@ const ShoesTransactionModel = db.define('shoes_transaction', {
     },
     status: {
         type: DataTypes.STRING,
-        defaultValue: 'pick-up',
+        defaultValue: 'received',
         allowNull: false,
         validate: {
             notEmpty: true,
-            isIn: [['received', 'process', 'ready', 'done']]
+            isIn: [['received','pick-up', 'process', 'ready', 'done']]
         }
     },
     payment: {
         type: DataTypes.STRING,
-        defaultValue: 'cash',
-        allowNull: false,
+        defaultValue: 'not-paid',
+        allowNull: true,
         validate: {
             notEmpty: true,
-            isIn: [['cash', 'transfer', 'e-wallet']]
+            isIn: [['not-paid', 'cash', 'transfer', 'e-wallet']]
         }
     },
     pickup_date: {

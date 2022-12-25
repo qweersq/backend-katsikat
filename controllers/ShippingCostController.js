@@ -19,6 +19,26 @@ export const getShippingCost = async (req, res) => {
         res.status(500).json({ message: "Error" });
     }
 }
+export const getShippingFormPickup = async (req, res) => {
+    const sql = `SELECT sc.id, s.name, milleage, date FROM shipping_cost sc LEFT JOIN staff s ON s.id = sc.staff_id WHERE type = 'pick-up'`
+
+    try {
+        const shippingForm = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(shippingForm);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+export const getShippingFormDelivery = async (req, res) => {
+    const sql = `SELECT sc.id, s.name, milleage, date FROM shipping_cost sc LEFT JOIN staff s ON s.id = sc.staff_id WHERE type = 'delivery'`
+
+    try {
+        const shippingForm = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(shippingForm);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
 export const getShippingCostById = async (req, res) => {
     try {
         const shippingCost = await ShippingCost.findOne({
@@ -30,14 +50,17 @@ export const getShippingCostById = async (req, res) => {
     }
 }
 export const createShippingCost = async (req, res) => {
-    const { staff_id, milleage, date } = req.body;
+    const { staff_id, milleage, type, date } = req.body;
+    const sql = `SELECT id FROM shipping_cost WHERE type = '${type}' GROUP BY created_at DESC LIMIT 1`
     try {
         await ShippingCost.create({
             staff_id: staff_id,
             milleage: milleage,
+            type: type,
             date: date
         });
-        res.status(200).json({ msg: "ShippingCost created successfully" });
+        const idShippingCost = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(idShippingCost);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }

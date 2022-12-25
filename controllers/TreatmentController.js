@@ -13,7 +13,7 @@ export const getTreatment = async (req, res) => {
     }
 }
 export const getTreatementForm = async (req, res) => {
-    const sql = `SELECT type AS value, type AS label FROM treatment`
+    const sql = `SELECT id, type AS value, type AS label FROM treatment`
 
     try {
         const treatmentForm = await db.query(sql, { type: db.QueryTypes.SELECT });

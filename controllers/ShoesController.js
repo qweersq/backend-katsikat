@@ -13,7 +13,7 @@ export const getShoes = async (req, res) => {
 }
 
 export const getShoesForm = async (req, res) => {
-    const sql = `SELECT type AS value, type AS label FROM shoes`
+    const sql = `SELECT id, type AS value, type AS label FROM shoes`
 
     try {
         const shoesForm = await db.query(sql, { type: db.QueryTypes.SELECT });

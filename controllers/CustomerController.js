@@ -18,6 +18,16 @@ export const getCustomer = async (req, res) => {
         res.status(500).json({ message: "Error" });
     }
 }
+export const getName = async (req, res) => {
+    const sql = `SELECT id, name FROM customer GROUP BY name ASC`
+
+    try {
+        const name = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(name);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
 export const getCustomerById = async (req, res) => {
     try {
         const customer = await Customer.findOne({
@@ -30,6 +40,7 @@ export const getCustomerById = async (req, res) => {
 }
 export const createCustomer = async (req, res) => {
     const { name, phone, address, gender } = req.body;	
+    const sql = `SELECT id FROM customer WHERE name = '${name}' AND phone = '${phone}' AND address = '${address}'`
     try {
         await Customer.create({
             name: name,
@@ -37,7 +48,8 @@ export const createCustomer = async (req, res) => {
             address: address,
             gender: gender,
         });
-        res.status(200).json({ msg: "Customer created successfully" });
+        const idCustomer = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(idCustomer);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }

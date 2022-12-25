@@ -60,22 +60,24 @@ export const getShoesTransactionById = async (req, res) => {
         const shoes_transaction = await ShoesTransaction.findOne({
             where: { id: req.params.id },
         });
-        res.status(200).json(shoes_transaction);    
+        res.status(200).json(shoes_transaction);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
 }
 export const createShoesTransaction = async (req, res) => {
-    const { customer_id, shoes_id, staff_id, treatment_id, shipping_id, pickup_date, due_date } = req.body;
+    const { customer_id, shoes_id, staff_id, treatment_id, pickup_staff, delivery_staff, status, pickup_date, due_date } = req.body;
     try {
         await ShoesTransaction.create({
             customer_id: customer_id,
             shoes_id: shoes_id,
             staff_id: staff_id,
             treatment_id: treatment_id,
-            shipping_id: shipping_id,
+            pickup_staff: pickup_staff,
+            delivery_staff: delivery_staff,
+            status: status,
             pickup_date: pickup_date,
-            due_date: due_date
+            due_date: due_date,
         });
         res.status(200).json({ msg: "ShoesTransaction created successfully" });
     } catch (error) {

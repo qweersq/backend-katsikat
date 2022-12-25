@@ -26,7 +26,7 @@ const ShippingCostModel = db.define('shipping_cost', {
         defaultValue: 'pick-up',
         validate: {
             notEmpty: true,
-            isIn: [['delivery']]
+            isIn: [['pick-up', 'delivery']]
         }
     },
     date: {
