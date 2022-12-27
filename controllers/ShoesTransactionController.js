@@ -53,6 +53,37 @@ export const getOrderList = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 }
+export const getBoxDataOperasional = async (req, res) => {
+    const sql = `SELECT COUNT(id) AS countBox FROM shipping_cost UNION ALL SELECT COUNT(id) FROM staff UNION ALL SELECT COUNT(id) FROM treatment UNION ALL SELECT COUNT(id) FROM shoes UNION ALL SELECT COUNT(id) FROM customer`
+
+    try {
+        const boxData = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(boxData);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+export const getAllForeignKeyById = async (req, res) => {
+    const id  = req.params.id;
+    const sql = `SELECT st.id, st.customer_id, st.shoes_id, st.staff_id, st.treatment_id, st.pickup_staff, st.delivery_staff, st.status, st.payment, st.pickup_date, st.due_date, cs.id as id_customer, cs.name as name_customer, cs.phone as phone_customer, cs.address as address_customer, cs.gender as gender_customer, sh.id as id_shoes, sh.type as type_shoes, tr.id as id_treatment, tr.type as type_treatment, tr.price as price_treatment, tr.description as desc_treatment, scp.id as id_sc_pickup, scp.staff_id as staffid_sc_pickup, stp.name as name_staff_pickup, scp.milleage as milleage_sc_pickup, scp.type as type_sc_pickup, scp.date as date_sc_pickup, scd.id as id_sc_delivery, scd.staff_id as staffid_sc_delivery, std.name as name_staff_delivery, scd.milleage as milleage_sc_delivery, scd.type as type_sc_delivery, scd.date as date_sc_delivery, stc.id as id_staff, stc.name as name_staff, stc.phone as phone_staff, stc.address as address_staff, stc.gender as gender_staff FROM shoes_transaction st
+    LEFT JOIN customer cs ON cs.id = st.customer_id
+    LEFT JOIN shoes sh ON sh.id = st.shoes_id 
+    LEFT JOIN treatment tr ON tr.id = st.treatment_id
+    LEFT JOIN shipping_cost scp ON scp.id = st.pickup_staff
+    LEFT JOIN shipping_cost scd ON scd.id = st.delivery_staff
+    LEFT JOIN staff stc ON stc.id = st.staff_id
+    LEFT JOIN staff stp ON stp.id = scp.staff_id
+    LEFT JOIN staff std ON std.id = scd.staff_id
+    WHERE st.id = '${id}'`
+
+    try {
+        const getAllForeignKeyId = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(getAllForeignKeyId);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
 
 
 export const getShoesTransactionById = async (req, res) => {
@@ -85,9 +116,9 @@ export const createShoesTransaction = async (req, res) => {
     }
 }
 export const updateShoesTransaction = async (req, res) => {
-    const { customer_id, shoes_id, staff_id, treatment_id, shipping_id, pickup_date, due_date } = req.body;
+    const { customer_id, shoes_id, staff_id, treatment_id, pickup_staff, delivery_staff, status, pickup_date, due_date } = req.body;
 
-    const sql = `UPDATE shoes_transaction SET customer_id = '${customer_id}', shoes_id = '${shoes_id}', staff_id = '${staff_id}', treatment_id = '${treatment_id}', shipping_id = '${shipping_id}', pickup_date = '${pickup_date}', due_date = '${due_date}' WHERE id = ${req.params.id}`;
+    const sql = `UPDATE shoes_transaction SET customer_id = '${customer_id}', shoes_id = '${shoes_id}', staff_id = '${staff_id}', treatment_id = '${treatment_id}',pickup_staff = '${pickup_staff}',delivery_staff = '${delivery_staff}', status = '${status}', pickup_date = '${pickup_date}', due_date = '${due_date}' WHERE id = ${req.params.id}`;
 
     try {
         await db.query(sql, (err, result) => {
@@ -104,8 +135,7 @@ export const deleteShoesTransaction = (req, res) => {
     try {
         db.query(sql, (err, result) => {
             if (err) response(err);
-        }
-        );
+        });
         res.status(200).json({ msg: "ShoesTransaction deleted successfully" });
     } catch (error) {
         res.status(500).json({ msg: error.message });

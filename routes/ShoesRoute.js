@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.get('/shoes', getShoes);
-router.get('/shoes/form', getShoesForm);
+router.get('/shoes/list', getShoesForm);
 router.get('/shoes/:id', getShoesById);
 router.post('/create/shoes', createShoes);
 router.put('/update/shoes/:id', updateShoes);

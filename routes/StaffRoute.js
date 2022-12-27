@@ -5,13 +5,15 @@ import {
     createStaff,
     updateStaff,
     deleteStaff,
-    getStaffForm
+    getStaffForm,
+    getStaffFormById
 } from "../controllers/StaffController.js";
 
 const router = express.Router();
 
 router.get('/staff', getStaff);
-router.get('/staff/form', getStaffForm);
+router.get('/staff/list', getStaffForm);
+router.get('/staff/form/:id', getStaffFormById);
 router.get('/staff/:id', getStaffById);
 router.post('/create/staff', createStaff);
 router.put('/update/staff/:id', updateStaff);

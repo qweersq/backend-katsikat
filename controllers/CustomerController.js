@@ -1,18 +1,12 @@
 
 import Customer from "../models/CustomerModel.js";
 import db from "../config/Database.js";
-import shoesTransaction from "../models/ShoesTransactionModel.js";
 
 export const getCustomer = async (req, res) => {
+    const sql = `SELECT * FROM customer`
     try {
-        const customer = await Customer.findAll({
-            include: [
-                {
-                    model: shoesTransaction,
-                    as: "shoes_transaction",
-                }]
-        });
-        res.json(customer);
+        const customer = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(customer);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Error" });

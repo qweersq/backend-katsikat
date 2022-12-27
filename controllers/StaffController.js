@@ -7,13 +7,7 @@ import { response } from "express";
 
 export const getStaff = async (req, res) => {
     try {
-        const staff = await Staff.findAll({
-            include: [
-                {
-                    model: ShippingCost,
-                    as: "shipping_cost",
-                }]
-        });
+        const staff = await Staff.findAll();
         res.json(staff);
     } catch (error) {
         console.log(error);
@@ -32,15 +26,20 @@ export const getStaffForm = async (req, res) => {
     }
 }
 
+export const getStaffFormById = async (req, res) => {
+    try {
+        const staff = await Staff.findOne({
+            where: { id: req.params.id },
+        });
+        res.status(200).json(staff);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
 export const getStaffById = async (req, res) => {
     try {
         const staff = await Staff.findOne({
             where: { id: req.params.id },
-            include: [
-                {
-                    model: ShippingCost,
-                    as: "shipping_cost",
-                }]
         });
         res.status(200).json(staff);
     } catch (error) {

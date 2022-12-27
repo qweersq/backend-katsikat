@@ -5,22 +5,17 @@ import db from "../config/Database.js";
 
 
 export const getShippingCost = async (req, res) => {
+    const sql = `SELECT sc.id, sc.staff_id, st.name, sc.milleage, sc.type, sc.date FROM shipping_cost sc LEFT JOIN staff st ON st.id = sc.staff_id`
     try {
-        const shippingCost = await ShippingCost.findAll({
-            include: [
-                {
-                    model: shoesTransaction,
-                    as: "shoes_transaction",
-                }]
-        });
-        res.json(shippingCost);
+        const shippingList = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(shippingList);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Error" });
     }
 }
 export const getShippingFormPickup = async (req, res) => {
-    const sql = `SELECT sc.id, s.name, milleage, date FROM shipping_cost sc LEFT JOIN staff s ON s.id = sc.staff_id WHERE type = 'pick-up'`
+    const sql = `SELECT sc.id, s.name, milleage, date FROM shipping_cost sc LEFT JOIN staff s ON s.id = sc.staff_id WHERE type = 'pick-up' GROUP BY sc.created_at DESC`
 
     try {
         const shippingForm = await db.query(sql, { type: db.QueryTypes.SELECT });
@@ -30,7 +25,7 @@ export const getShippingFormPickup = async (req, res) => {
     }
 }
 export const getShippingFormDelivery = async (req, res) => {
-    const sql = `SELECT sc.id, s.name, milleage, date FROM shipping_cost sc LEFT JOIN staff s ON s.id = sc.staff_id WHERE type = 'delivery'`
+    const sql = `SELECT sc.id, s.name, milleage, date FROM shipping_cost sc LEFT JOIN staff s ON s.id = sc.staff_id WHERE type = 'delivery' GROUP BY sc.created_at DESC`
 
     try {
         const shippingForm = await db.query(sql, { type: db.QueryTypes.SELECT });
@@ -40,11 +35,11 @@ export const getShippingFormDelivery = async (req, res) => {
     }
 }
 export const getShippingCostById = async (req, res) => {
+    const id = req.params.id;
+    const sql = `SELECT sc.id, sc.staff_id, st.name, sc.milleage, sc.type, sc.date FROM shipping_cost sc LEFT JOIN staff st ON st.id = sc.staff_id WHERE sc.id = '${id}'`
     try {
-        const shippingCost = await ShippingCost.findOne({
-            where: { id: req.params.id },
-        });
-        res.status(200).json(shippingCost);
+        const shippingCostDataById = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(shippingCostDataById[0]);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -66,9 +61,9 @@ export const createShippingCost = async (req, res) => {
     }
 }
 export const updateShippingCost = async (req, res) => {
-    const { staff_id, milleage, date } = req.body;
+    const { staff_id, milleage, type, date } = req.body;
 
-    const sql = `UPDATE shipping_cost SET staff_id = '${staff_id}', milleage = '${milleage}', date = '${date}' WHERE id = ${req.params.id}`;
+    const sql = `UPDATE shipping_cost SET staff_id = '${staff_id}', milleage = '${milleage}',type = '${type}', date = '${date}' WHERE id = ${req.params.id}`;
 
     try {
         await db.query(sql, (err, result) => {
