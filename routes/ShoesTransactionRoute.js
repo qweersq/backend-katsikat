@@ -8,7 +8,10 @@ import {
     getOrderList,
     getDashboardData,
     getAllForeignKeyById,
-    getBoxDataOperasional
+    getBoxDataOperasional,
+    getSalesShoesTransaction,
+    getSalesShoesTransactionById,
+    putSalesShoesTransactionById
 } from "../controllers/ShoesTransactionController.js";
 
 const router = express.Router();
@@ -22,5 +25,11 @@ router.get('/shoes-transaction/:id', getShoesTransactionById);
 router.post('/create/shoes-transaction', createShoesTransaction);
 router.put('/update/shoes-transaction/:id', updateShoesTransaction);
 router.delete('/shoes-transaction/:id', deleteShoesTransaction);
+
+
+router.get('/finance/sales/shoes-transaction', getSalesShoesTransaction);
+router.get('/finance/sales/shoes-transaction/:id', getSalesShoesTransactionById);
+router.put('/finance/sales/shoes-transaction/:id', putSalesShoesTransactionById);
+
 
 export default router;

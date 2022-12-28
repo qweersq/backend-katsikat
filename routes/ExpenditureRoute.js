@@ -4,12 +4,14 @@ import {
     getExpenditureById,
     createExpenditure,
     updateExpenditure,
-    deleteExpenditure
+    deleteExpenditure,
+    getFinanceBox
 } from "../controllers/ExpenditureController.js";
 
 const router = express.Router();
 
 router.get('/expenditure', getExpenditure);
+router.get('/box/sum', getFinanceBox);
 router.get('/expenditure/:id', getExpenditureById);
 router.post('/create/expenditure', createExpenditure);
 router.put('/update/expenditure/:id', updateExpenditure);

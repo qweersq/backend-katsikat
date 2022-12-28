@@ -64,6 +64,7 @@ export const getBoxDataOperasional = async (req, res) => {
     }
 }
 
+
 export const getAllForeignKeyById = async (req, res) => {
     const id  = req.params.id;
     const sql = `SELECT st.id, st.customer_id, st.shoes_id, st.staff_id, st.treatment_id, st.pickup_staff, st.delivery_staff, st.status, st.payment, st.pickup_date, st.due_date, cs.id as id_customer, cs.name as name_customer, cs.phone as phone_customer, cs.address as address_customer, cs.gender as gender_customer, sh.id as id_shoes, sh.type as type_shoes, tr.id as id_treatment, tr.type as type_treatment, tr.price as price_treatment, tr.description as desc_treatment, scp.id as id_sc_pickup, scp.staff_id as staffid_sc_pickup, stp.name as name_staff_pickup, scp.milleage as milleage_sc_pickup, scp.type as type_sc_pickup, scp.date as date_sc_pickup, scd.id as id_sc_delivery, scd.staff_id as staffid_sc_delivery, std.name as name_staff_delivery, scd.milleage as milleage_sc_delivery, scd.type as type_sc_delivery, scd.date as date_sc_delivery, stc.id as id_staff, stc.name as name_staff, stc.phone as phone_staff, stc.address as address_staff, stc.gender as gender_staff FROM shoes_transaction st
@@ -137,6 +138,44 @@ export const deleteShoesTransaction = (req, res) => {
             if (err) response(err);
         });
         res.status(200).json({ msg: "ShoesTransaction deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+export const getSalesShoesTransaction = async (req, res) => {
+    const sql = `SELECT DISTINCT st.id, c.name, tr.type as treatment, tr.price, st.payment, st.due_date FROM shoes_transaction st LEFT JOIN customer c ON c.id = st.customer_id LEFT JOIN treatment tr ON tr.id = st.treatment_id`
+
+    try {
+        const salesShoesTR = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(salesShoesTR);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+export const putSalesShoesTransactionById = async (req, res) => {
+    const { payment } = req.body;
+
+    const sql = `UPDATE shoes_transaction SET payment = '${payment}' WHERE id = ${req.params.id}`;
+
+    try {
+        await db.query(sql, (err, result) => {
+            if (err) response(err);
+        });
+        res.status(200).json({ msg: "Payment update successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+export const getSalesShoesTransactionById = async (req, res) => {
+    const { payment } = req.body;
+
+    const sql = `SELECT DISTINCT st.id, c.name, tr.type as treatment, tr.price, st.payment, st.due_date FROM shoes_transaction st LEFT JOIN customer c ON c.id = st.customer_id LEFT JOIN treatment tr ON tr.id = st.treatment_id WHERE st.id = ${req.params.id}`;
+
+    try {
+        const salesShoesTRById = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(salesShoesTRById[0]);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
