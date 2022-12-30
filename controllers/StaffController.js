@@ -86,5 +86,16 @@ export const deleteStaff = async (req, res) => {
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
+}
 
+
+export const getStaffCount = async (req, res) => {
+    const sql = `SELECT COUNT(id) AS count_staff FROM staff`
+
+    try {
+        const staffCount = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(staffCount[0]);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
 }

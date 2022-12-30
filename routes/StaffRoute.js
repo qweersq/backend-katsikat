@@ -6,13 +6,15 @@ import {
     updateStaff,
     deleteStaff,
     getStaffForm,
-    getStaffFormById
+    getStaffFormById,
+    getStaffCount
 } from "../controllers/StaffController.js";
 
 const router = express.Router();
 
 router.get('/staff', getStaff);
 router.get('/staff/list', getStaffForm);
+router.get('/staff/count', getStaffCount);
 router.get('/staff/form/:id', getStaffFormById);
 router.get('/staff/:id', getStaffById);
 router.post('/create/staff', createStaff);

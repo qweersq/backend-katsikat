@@ -11,7 +11,11 @@ import {
     getBoxDataOperasional,
     getSalesShoesTransaction,
     getSalesShoesTransactionById,
-    putSalesShoesTransactionById
+    putSalesShoesTransactionById,
+    getSalaryShoesTransactionByStaffId,
+    getSalaryShippingCostByStaffId,
+    getSumCommision,
+    getSumCommisionById
 } from "../controllers/ShoesTransactionController.js";
 
 const router = express.Router();
@@ -28,8 +32,12 @@ router.delete('/shoes-transaction/:id', deleteShoesTransaction);
 
 
 router.get('/finance/sales/shoes-transaction', getSalesShoesTransaction);
+router.get('/finance/salary/shoes-transaction/:id', getSalaryShoesTransactionByStaffId);
+router.get('/finance/salary/shipping-cost/:id', getSalaryShippingCostByStaffId);
 router.get('/finance/sales/shoes-transaction/:id', getSalesShoesTransactionById);
 router.put('/finance/sales/shoes-transaction/:id', putSalesShoesTransactionById);
+router.get('/finance/sum/commision', getSumCommision);
+router.get('/finance/sum/commision/:id', getSumCommisionById);
 
 
 export default router;

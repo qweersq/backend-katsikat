@@ -28,6 +28,14 @@ const TreatmentModel = db.define('treatment', {
             len: [3, 100]
         }
     },
+    commision: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    },
     created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

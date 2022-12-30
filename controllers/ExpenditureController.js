@@ -25,11 +25,11 @@ export const getFinanceBox = async (req, res) => {
     }
 }
 export const getExpenditureById = async (req, res) => {
+    const sql = `SELECT exp.id, exp.name AS item_name, exp.staff_id, sf.name AS staff_name, exp.price, exp.description, exp.date, exp.files from expenditure exp LEFT JOIN staff sf ON sf.id = exp.staff_id where exp.id = ${req.params.id}`
+
     try {
-        const expenditure = await Expenditure.findOne({
-            where: { id: req.params.id },
-        });
-        res.status(200).json(expenditure);
+        const expenditure = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(expenditure[0]);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
@@ -53,7 +53,7 @@ export const createExpenditure = async (req, res) => {
 export const updateExpenditure = async (req, res) => {
     const { name, price, staff_id, description, date, files } = req.body;
 
-    const sql = `UPDATE expenditure SET name = '${name}', price = '${price}', staff_id = '${staff_id}' description = '${description}', date = '${date}', files = '${files}' WHERE id = ${req.params.id}`;
+    const sql = `UPDATE expenditure SET name = '${name}', price = '${price}', staff_id = '${staff_id}', description = '${description}', date = '${date}', files = '${files}' WHERE id = ${req.params.id}`;
 
     try {
         await db.query(sql, (err, result) => {

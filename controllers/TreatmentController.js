@@ -33,12 +33,13 @@ export const getTreatmentById = async (req, res) => {
     }
 }
 export const createTreatment = async (req, res) => {
-    const { type, price, description } = req.body;
+    const { type, price, description, commision } = req.body;
     try {
         await Treatment.create({
             type: type,
             price: price,
-            description: description
+            description: description,
+            commision: commision
         });
         res.status(200).json({ msg: "Treatment created successfully" });
     } catch (error) {
@@ -46,9 +47,9 @@ export const createTreatment = async (req, res) => {
     }
 }
 export const updateTreatment = async (req, res) => {
-    const { type, price, description } = req.body;
+    const { type, price, description,commision } = req.body;
 
-    const sql = `UPDATE treatment SET type = '${type}', price = '${price}', description = '${description}' WHERE id = ${req.params.id}`;
+    const sql = `UPDATE treatment SET type = '${type}', price = '${price}', description = '${description}', commision = '${commision}' WHERE id = ${req.params.id}`;
 
     try {
         await db.query(sql, (err, result) => {

@@ -180,3 +180,44 @@ export const getSalesShoesTransactionById = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 }
+
+export const getSalaryShoesTransactionByStaffId = async (req, res) => {
+
+    const sql = `SELECT st.id AS id_trans, cus.name AS name_customer, sf.name AS name_staff, tr.type AS treatment, tr.commision from shoes_transaction st LEFT JOIN customer cus ON cus.id = st.customer_id LEFT JOIN treatment tr ON tr.id = st.treatment_id LEFT JOIN staff sf ON sf.id = st.staff_id WHERE st.staff_id = ${req.params.id}`
+
+    try {
+        const salaryShoesTRById = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(salaryShoesTRById);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+export const getSalaryShippingCostByStaffId = async (req, res) => {
+    const sql = `SELECT sc.id AS id_shipping, sf.id AS id_staff, sf.name AS name_staff, sc.milleage AS milleage, sc.type AS type, sc.date AS date FROM shipping_cost sc LEFT JOIN staff sf ON sf.id = sc.staff_id WHERE sc.staff_id = ${req.params.id}`
+
+    try {
+        const salaryShippingById = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(salaryShippingById);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+export const getSumCommision = async (req, res) => {
+    const sql = `SELECT SUM(tr.commision) as sum_commision FROM shoes_transaction st LEFT JOIN treatment tr ON tr.id = st.treatment_id`
+    try {
+        const sumCommision = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(sumCommision[0]);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+export const getSumCommisionById = async (req, res) => {
+    const sql = `SELECT SUM(tr.commision) as sum_commision_id FROM shoes_transaction st LEFT JOIN treatment tr ON tr.id = st.treatment_id WHERE st.staff_id = ${req.params.id}`
+    try {
+        const getSumCommisionById = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(getSumCommisionById[0]);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}

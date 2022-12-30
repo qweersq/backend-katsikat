@@ -6,7 +6,9 @@ import {
     updateShippingCost,
     deleteShippingCost,
     getShippingFormPickup,
-    getShippingFormDelivery
+    getShippingFormDelivery,
+    getSumMilleage,
+    getSumMilleageById
 } from "../controllers/ShippingCostController.js";
 
 const router = express.Router();
@@ -18,5 +20,9 @@ router.get('/shipping-cost/:id', getShippingCostById);
 router.post('/create/shipping-cost', createShippingCost);
 router.put('/update/shipping-cost/:id', updateShippingCost);
 router.delete('/shipping-cost/:id', deleteShippingCost);
+
+router.get('/shipping-cost/sum/milleage', getSumMilleage);
+router.get('/shipping-cost/sum/milleage/:id', getSumMilleageById);
+
 
 export default router;

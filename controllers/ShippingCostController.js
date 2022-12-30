@@ -87,3 +87,24 @@ export const deleteShippingCost = (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 }
+
+export const getSumMilleage = async (req, res) => {
+    const sql = `SELECT SUM(milleage) as sum_milleage FROM shipping_cost`
+    try {
+        const sumMilleage = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(sumMilleage[0]);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error" });
+    }
+}
+
+export const getSumMilleageById = async (req, res) => {
+    const sql = `SELECT SUM(milleage) as sum_milleage_id FROM shipping_cost WHERE staff_id = ${req.params.id}`
+    try {
+        const SumMilleageById = await db.query(sql, { type: db.QueryTypes.SELECT });
+        res.status(200).json(SumMilleageById[0]);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
