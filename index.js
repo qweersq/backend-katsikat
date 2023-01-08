@@ -13,6 +13,7 @@ import treatmentRoute from "./routes/TreatmentRoute.js";
 import shippingCostRoute from "./routes/ShippingCostRoute.js";
 import expenditureRoute from "./routes/ExpenditureRoute.js";
 import customerRoute from "./routes/CustomerRoute.js";
+import authRoute from "./routes/AuthRoute.js";
 import dotenv from "dotenv";
 import db from "./config/Database.js";
 
@@ -21,9 +22,9 @@ dotenv.config();
 const __dirname = path.resolve();
 const app = express();
 
-(async() => {
-  await db.sync();
-})();
+// (async() => {
+//   await db.sync();
+// })();
  
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -33,12 +34,17 @@ app.use(session({
 }))
 
 
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:5001'
+}));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(express.json());
 
+app.use(authRoute);
 app.use(userRoute);
 app.use(shoesTransRoute);
 app.use(shoesRoute);
